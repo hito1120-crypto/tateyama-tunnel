@@ -19,6 +19,7 @@ canvas{display:block;width:100%;height:100%}
 #dg{font:300 34px 'Consolas','Orbitron',monospace;letter-spacing:.06em;color:#e8f2ff;line-height:1.1}
 #dd{font-size:11px;color:#93abc2}
 @media(max-width:700px){#panel{width:170px;font-size:11px}#clock svg{width:84px;height:84px}#dg{font-size:24px}}
+#pt{display:none}
 @media(max-width:700px){#pt{display:block}#panel{top:44px;max-height:60vh;overflow:auto}}
 #mb{display:flex;gap:6px;margin:4px 0 6px}#mb button{flex:1;padding:5px;border:1px solid #1d3550;background:#0b1626;color:#cfe3f5;border-radius:5px}#mb .on{background:#2b6cb0;color:#fff}
 #panel select,#panel input[type=time]{width:100%;margin-top:2px}
@@ -32,7 +33,7 @@ canvas{display:block;width:100%;height:100%}
 #title span{display:block;font-size:11px;color:#93abc2}
 </style></head><body>
 <canvas id="c"></canvas><div id="lab"></div>
-<button id="pt" style="position:fixed;left:12px;top:12px;z-index:5;padding:2px 8px;display:none">☰</button>
+<button id="pt" style="position:fixed;left:12px;top:12px;z-index:5;padding:2px 8px">☰</button>
 <div id="panel"><h1>立山黒部アルペンルート</h1>
 <label>表示時間幅 <select id="sp"><option value="day" selected>1日(早回し・光)</option><option value="60">1時間(実物の車両)</option><option value="15">15分(実物の車両)</option><option value="5">5分(実物の車両)</option></select></label>
 <div id="realBox" style="display:none">
@@ -292,7 +293,7 @@ const VIEWS={overview:()=>({...mid('黒部ダム','扇沢'),th:-.38,ph:.26,d:520
   north:()=>({tx:300,ty:900,tz:-500,th:2.7,ph:.45,d:26000}),
   mountain:()=>({tx:300,ty:830,tz:-800,th:0.15,ph:.55,d:27000})};
 function setView(n){Object.assign(C,VIEWS[n]())}
-function applyCam(){const cp=Math.cos(C.ph);cam.position.set(C.tx+C.d*cp*Math.sin(C.th),C.ty*P.exag*root.scale.y+C.d*Math.sin(C.ph),C.tz+C.d*cp*Math.cos(C.th));cam.lookAt(C.tx,C.ty*P.exag*root.scale.y,C.tz)}
+function applyCam(){const cp=Math.cos(C.ph),dd=C.d*(P.mode==='overview'&&!P.video?Math.max(1,1.6/cam.aspect):1);cam.position.set(C.tx+dd*cp*Math.sin(C.th),C.ty*P.exag*root.scale.y+dd*Math.sin(C.ph),C.tz+dd*cp*Math.cos(C.th));cam.lookAt(C.tx,C.ty*P.exag*root.scale.y,C.tz)}
 let drag=null;cv.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,b:e.button};cv.setPointerCapture(e.pointerId)});
 cv.addEventListener('pointerup',()=>drag=null);
 cv.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-drag.x,dy=e.clientY-drag.y;drag.x=e.clientX;drag.y=e.clientY;
